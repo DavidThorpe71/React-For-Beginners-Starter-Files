@@ -27,9 +27,7 @@ class App extends React.Component {
         });
     };
 
-
     componentDidUpdate() {
-        console.log(this.state.order);
         localStorage.setItem(this.props.match.params.storeId, JSON.stringify(this.state.order));
     };
 
@@ -48,6 +46,18 @@ class App extends React.Component {
         });
     };
 
+    updateFish = (key, updatedFish) => {
+        const fishes = {...this.state.fishes};
+        fishes[key] = updatedFish;
+        this.setState({ fishes });
+    };
+
+    deleteFish = (key, deleteFish) => {
+        const fishes = {...this.state.fishes};
+        fishes[key] = null;
+        this.setState({ fishes });
+    };
+
     loadSampleFishes = () => {
         this.setState({ fishes: sampleFishes }); 
     };
@@ -58,6 +68,12 @@ class App extends React.Component {
         // 2. either add to the order or update the order number
         order[key] = order[key] + 1 || 1
         // 3. call setState to update the state object
+        this.setState({ order });
+    }
+
+    removeFromOrder = (key) => {
+        const order = { ...this.state.order };
+        delete order[key];
         this.setState({ order });
     }
 
@@ -79,10 +95,13 @@ class App extends React.Component {
                 </div>
                 <Order 
                     fishes={this.state.fishes} 
-                    order={this.state.order} 
+                    order={this.state.order}
+                    removeFromOrder={this.removeFromOrder}
                 />
                 <Inventory 
                     addFish={this.addFish}
+                    updateFish={this.updateFish}
+                    deleteFish={this.deleteFish}
                     loadSampleFishes={this.loadSampleFishes}
                     fishes={this.state.fishes}
                 />
